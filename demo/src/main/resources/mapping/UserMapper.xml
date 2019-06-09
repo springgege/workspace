@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.boot.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.spring.boot.dto.User">
+    <id column="Id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sex" jdbcType="SMALLINT" property="sex" />
+    <result column="courseId" jdbcType="INTEGER" property="courseid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    Id, name, sex, courseId
+  </sql>
+
+  <select id="searchList" parameterType="java.util.List" resultMap="BaseResultMap">
+select * from USER
+<where>
+  id in
+  <foreach collection="id" item="i" open="(" close=")" separator=",">
+    #{i}
+  </foreach>
+
+</where>
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from USER
+    where Id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from USER
+    where Id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.spring.boot.dto.User">
+    insert into USER (Id, name, sex, 
+      courseId)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=SMALLINT}, 
+      #{courseid,jdbcType=INTEGER})
+  </insert>
+
+
+
+  <insert id="insertSelective" parameterType="com.spring.boot.dto.User">
+    insert into USER
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        Id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="courseid != null">
+        courseId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=SMALLINT},
+      </if>
+      <if test="courseid != null">
+        #{courseid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.spring.boot.dto.User">
+    update USER
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=SMALLINT},
+      </if>
+      <if test="courseid != null">
+        courseId = #{courseid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.spring.boot.dto.User">
+    update USER
+    set name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=SMALLINT},
+      courseId = #{courseid,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
